@@ -7,6 +7,7 @@ import numpy as np
 #load data
 mnist = tf.keras.datasets.mnist
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
+# print(x_test, y_test, x_train, y_train)
 
 # Rescale the images from [0,255] to the [0.0,1.0] range in order for image to fit in a smaller frame and 0-1 range will represent darkeness 
 #shape of x_train = (60000, 28, 28)
@@ -32,14 +33,24 @@ max_pooling = KL.MaxPool2D((2,2), (2,2))(conv_layer)
 #turn matrix into array and each position has value refereing to intensity of pixel
 #length of 5408 array from 13*13*32
 flat = KL.Flatten()(max_pooling)
+
 #connect layers after the 32 inital nodes to get output
 outputs = KL.Dense(10,activation = tf.nn.softmax)(flat)
+
 #create model
 model = KM.Model(inputs, outputs)
-model.summary()
+
+# model.summary()
 # adam optimzer is most common
 model.compile(optimizer = "adam", loss = "sparse_categorical_crossentropy", metrics = ['accuracy'])
-model.fit(x_train,y_train)
+model.fit(x_train,y_train, epochs = 10)
 test_loss, test_acc = model.evaluate(x_test,y_test)
 print(f"Test Loss: {test_loss} ---- Test Accuracy {test_acc}")
+
+
+
+
+
+
+
 
