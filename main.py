@@ -8,30 +8,38 @@ import numpy as np
 mnist = tf.keras.datasets.mnist
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
 
-# Rescale the images from [0,255] to the [0.0,1.0] range in order for image to fit in a smaller frame and allow the NN to have consistent inputs
+# Rescale the images from [0,255] to the [0.0,1.0] range in order for image to fit in a smaller frame and 0-1 range will represent darkeness 
 #shape of x_train = (60000, 28, 28)
 #            60000 images, 28x28 for size of image
+
 x_train = x_train/255.0
 x_test = x_test/255.0
-
 #add another dimension for "channel" to help NN determine intensity of greyscale vs white space
 x_train = np.expand_dims(x_train, axis = -1)
 x_test = np.expand_dims(x_test, axis = -1)
 
-print(x_test.shape)
 
 #build model
 inputs = KL.Input(shape = (28,28,1)) #shape is from x_test and x_train
-#32 input filters each exiting with a weight and feature map, no padding so smaller output(risk of loosing information at edges),
-# 3x3 filter gets applies to 28x28 image to get feature map and results in 3x3 feature map(slding 3x3 onto 28x28 to get clearer image)
+#32 3x3 filters gets applied to 28x28 image with stride 1. 3x3 moves moves over 1 to right and gets largest value 
+#we get 26x26 matrix from [(input_size - filter_size + 2 * padding) / stride] + 1 = [(28 - 3 + 2 * 0) / 1] + 1
 conv_layer = KL.Conv2D(32,(3,3), padding = "valid", activation = tf.nn.relu)(inputs)
-#divide input into regions and returns max value 
+
+#divide 3x3 matrix and slide 2x2 matrix over and return a max values onto 2x2 matrix  
+#(13,13,32)
 max_pooling = KL.MaxPool2D((2,2), (2,2))(conv_layer)
-#
+
+#turn matrix into array and each position has value refereing to intensity of pixel
+#length of 5408 array from 13*13*32
 flat = KL.Flatten()(max_pooling)
-#
+#connect layers after the 32 inital nodes to get output
 outputs = KL.Dense(10,activation = tf.nn.softmax)(flat)
-#
+#create model
 model = KM.Model(inputs, outputs)
 model.summary()
+# adam optimzer is most common
+model.compile(optimizer = "adam", loss = "sparse_categorical_crossentropy", metrics = ['accuracy'])
+model.fit(x_train,y_train)
+test_loss, test_acc = model.evaluate(x_test,y_test)
+print(f"Test Loss: {test_loss} ---- Test Accuracy {test_acc}")
 
