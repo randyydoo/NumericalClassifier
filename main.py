@@ -4,7 +4,6 @@ import tensorflow.keras.layers as KL
 import tensorflow.keras.models as KM
 import matplotlib.pyplot as plt
 import numpy as np
-'''
 #load data
 mnist = tf.keras.datasets.mnist
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
@@ -46,14 +45,10 @@ model = KM.Model(inputs, outputs)
 # model.summary()
 # adam optimzer is most common
 model.compile(optimizer = "adam", loss = "sparse_categorical_crossentropy", metrics = ['accuracy'])
-model.fit(x_train,y_train, epochs = 3)
+model.fit(x_train,y_train, epochs = 5)
 test_loss, test_acc = model.evaluate(x_test,y_test)
-model.save('MNIST.model')
-print(f"Test Loss: {test_loss} ---- Test Accuracy {test_acc}")
-'''
-#read images and output predictions
-for num in range(1,6):
-    img = cv.imread(f'{num}.png')[:,:,0]
-    img = np.array([img])
-    plt.imshow(img[0])
-    plt.show()
+
+# save model
+model.save('MNIST.h5')
+
+# print(f"Test Loss: {test_loss} ---- Test Accuracy {test_acc}")
