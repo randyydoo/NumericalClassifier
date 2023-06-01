@@ -42,7 +42,7 @@ outputs = KL.Dense(10,activation = tf.nn.softmax)(flat)
 #create model
 model = KM.Model(inputs, outputs)
 
-# model.summary()
+model.summary()
 # adam optimzer is most common
 model.compile(optimizer = "adam", loss = "sparse_categorical_crossentropy", metrics = ['accuracy'])
 model.fit(x_train,y_train, epochs = 10)
