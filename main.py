@@ -45,7 +45,7 @@ model = KM.Model(inputs, outputs)
 # model.summary()
 # adam optimzer is most common
 model.compile(optimizer = "adam", loss = "sparse_categorical_crossentropy", metrics = ['accuracy'])
-model.fit(x_train,y_train, epochs = 5)
+model.fit(x_train,y_train, epochs = 10)
 test_loss, test_acc = model.evaluate(x_test,y_test)
 
 # save model
