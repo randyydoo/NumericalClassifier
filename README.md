@@ -1,5 +1,5 @@
 # MINSTclassification
-## Summary
-<img src="/images/model.png">
+## Model Summary
+<img src="/images/summary.png">
 ## Results
 <img src="/images/results.png">
